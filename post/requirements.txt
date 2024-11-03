@@ -1,0 +1,7 @@
+matplotlib
+numpy
+click
+pyvista
+nibabel
+simple_mri
+vtk

@@ -1,0 +1,19 @@
+[TimeLoop]
+TEnd = 72h
+InitialTimeStepSize = 1h
+
+[Grid]
+File = data.vtu
+Verbosity = true
+
+[Problem]
+Name = diffusion
+SurfaceConductance = 1e-4 # in mm/s
+TransferCoeffToBlood = 1e-5 # in 1/s
+PorosityBrain = 0.2
+PorositySAS = 0.3
+UseIsotropicMeanDiffusion = true
+UseCurveFit = true
+
+[LevenbergMarquardt]
+BaseEpsilon = 1e-5

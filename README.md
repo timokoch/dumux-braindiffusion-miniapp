@@ -60,6 +60,9 @@ dumux
 └───dumux
 ```
 
+Usage
+----------
+
 You can compile the application by running
 
 * `cd dumux-braindiffsion-miniapp/build-cmake/app && make braindiffusion`
@@ -70,3 +73,35 @@ and run it with
 
 Runtime parameters can be configures via the parameter file `params.input`
 that is located in the app folder but also linked to the build folder.
+
+For postprocessing, switch to the folder `dumux-braindiffsion-miniapp/post`.
+Create a Python virtual environment (tested Python version 3.10) and install requirements:
+
+* `python3 -m venv venv`
+* `source venv/bin/activate`
+* `pip install -r requirements.txt`
+
+Then run the postprocessing scripts to create result visualizations:
+
+* `python plot.py` (plots concentration in white and gray matter over time)
+* `python map_to_mri.py` (maps the concentration field to the MRI reference image, may take a while)
+* `python plot_mapped_mri.py` (plots the concentration field on the MRI reference image)
+
+MRI noise estimation in LookLocker sequence and Mixed sequence
+----------------------------------------------------------------
+
+The concentration data used as basis for the simulations is estimated from raw MRI data.
+The MRI data is subject to noise. In what way noise propagates through the estimation
+is estimates in the scripts provided in the `noise` folder.
+
+
+Other info
+----------
+
+There is an app to test the curve fitting algorithm for the boudary data. Build
+
+* `cd dumux-braindiffsion-miniapp/build-cmake/app && make curvefit`
+* `./curvefit`
+* `cd ../../post && python plot_curvefit.py`
+
+to inspect the results. This is thought to be used for debugging purposes only.

@@ -17,4 +17,4 @@ UseCurveFit = true
 DiffusionFactor = 1.0
 
 [LevenbergMarquardt]
-BaseEpsilon = 1e-5
+BaseEpsilon = 1e-3

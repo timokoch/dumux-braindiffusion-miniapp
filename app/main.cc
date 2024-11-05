@@ -186,10 +186,10 @@ private:
     Scalar concentrationBoundaryData(int dofIndex) const
     {
         const auto& p = concentrationBoundaryDataParams_[dofIndex];
-        return concentrationBoundaryDataFunction(time_, p);
+        return concentrationBoundaryDataFunction_(time_, p);
     }
 
-    Scalar concentrationBoundaryDataFunction(const Scalar time, const Dune::BlockVector<Scalar>& p) const
+    Scalar concentrationBoundaryDataFunction_(const Scalar time, const Dune::BlockVector<Scalar>& p) const
     {
         // check if any parameters are not finite
         for (int i = 0; i < p.size(); ++i)
@@ -197,7 +197,10 @@ private:
                 DUNE_THROW(Dune::Exception, "Invalid parameter values: " << p);
 
         if (useCurveFit_)
-            return p[0]*(std::exp(std::clamp(p[1], 0.01, 10.0)*time/86400.0) - std::exp(-std::clamp(p[2], 0.01, 10.0)*time/86400.0));
+        {
+            const auto days = time/86400.0;
+            return p[0]*days*std::exp(-p[1]*days);
+        }
         else
             return Dumux::interpolate<InterpolationPolicy::LinearTable>(time, times_, p);
     }
@@ -272,13 +275,21 @@ private:
 
             if (useCurveFit_)
             {
-                Dune::BlockVector<double> p({0.2, 2.0, 0.2});
+                Dune::BlockVector<double> p({0.2, 1.0});
                 Dune::BlockVector<double> res(times_.size());
                 const auto residual = [&](const auto& params)
                 {
                     for (size_t i = 0; i < times_.size(); ++i)
                     {
-                        res[i] = this->concentrationBoundaryDataFunction(times_[i], params) - boundaryData[i];
+                        res[i] = this->concentrationBoundaryDataFunction_(times_[i], params) - boundaryData[i];
+
+                        // enforce some bounds on the parameters
+                        if (params[0] < 0.0 || params[0] > 10.0)
+                            res[i] = params[0]*1e4;
+
+                        if (params[1] < 0.0 || params[1] > 5.0)
+                            res[i] = params[1]*1e4;
+
                         if (!std::isfinite(res[i]))
                             DUNE_THROW(Dune::Exception, "Invalid residual value at vertex " << vIdx << " at time "
                                         << times_[i] << ": " << res[i] << " for parameters " << params);
@@ -306,7 +317,7 @@ private:
         }
 
         if (useCurveFit_)
-            std::cout << "Biexponential curve fit converged for " << converged
+            std::cout << "Curve fit converged for " << converged
                       << " / " << numBoundaryVertices << std::endl;
     }
 };

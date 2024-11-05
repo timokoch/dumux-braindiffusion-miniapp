@@ -2,30 +2,33 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import click
 
 sec_to_days = 1.0/(24*60*60)
 
 plot_concentration = True
 
 # plot time series data from total.txt, whitematter.txt, and graymatter.txt
-def plot_data():
+@click.command()
+@click.option('--folder', default="../build-cmake/app", help='Folder containing the data')
+def plot_data(folder: str):
     # load data
     if plot_concentration:
-        total = np.loadtxt('total.txt')
-        white = np.loadtxt('whitematter.txt')
-        gray = np.loadtxt('graymatter.txt')
+        total = np.loadtxt(f'{folder}/total.txt')
+        white = np.loadtxt(f'{folder}/whitematter.txt')
+        gray = np.loadtxt(f'{folder}/graymatter.txt')
 
-        total_data = np.loadtxt('total_data.txt')
-        white_data = np.loadtxt('whitematter_data.txt')
-        gray_data = np.loadtxt('graymatter_data.txt')
+        total_data = np.loadtxt(f'{folder}/total_data.txt')
+        white_data = np.loadtxt(f'{folder}/whitematter_data.txt')
+        gray_data = np.loadtxt(f'{folder}/graymatter_data.txt')
     else:
-        total = np.loadtxt('total_amount.txt')
-        white = np.loadtxt('whitematter_amount.txt')
-        gray = np.loadtxt('graymatter_amount.txt')
+        total = np.loadtxt(f'{folder}/total_amount.txt')
+        white = np.loadtxt(f'{folder}/whitematter_amount.txt')
+        gray = np.loadtxt(f'{folder}/graymatter_amount.txt')
 
-        total_data = np.loadtxt('total_amount_data.txt')
-        white_data = np.loadtxt('whitematter_amount_data.txt')
-        gray_data = np.loadtxt('graymatter_amount_data.txt')
+        total_data = np.loadtxt(f'{folder}//total_amount_data.txt')
+        white_data = np.loadtxt(f'{folder}/whitematter_amount_data.txt')
+        gray_data = np.loadtxt(f'{folder}/graymatter_amount_data.txt')
 
     # plot simulation data
     pt = plt.plot(total[:, 0]*sec_to_days, total[:, 1], label='Total')

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import click
 from pathlib import Path
 
-def overlay_images(overlay: Path, background: Path, ax, slicer_op):
+def overlay_images(overlay: Path, background: Path, ax, slicer_op, min_val=None, max_val=None):
     # Load your two NIfTI images
     background_nii = nib.load(background)
     overlay_nii = nib.load(overlay)
@@ -26,7 +26,7 @@ def overlay_images(overlay: Path, background: Path, ax, slicer_op):
     # Overlay the second image where it's not NaN, using a colormap and some transparency
     # Masked array so that NaNs in overlay are transparent
     overlay_masked = np.ma.masked_where(mask, overlay_slice)
-    ax.imshow(overlay_masked, cmap='viridis', interpolation='none', alpha=1.0)
+    ax.imshow(overlay_masked, cmap='inferno', interpolation='none', alpha=1.0, vmin=min_val, vmax=max_val)
 
     # Display the final overlay image
     ax.axis("off")

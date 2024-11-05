@@ -25,6 +25,7 @@ Software requirements and installation
 * C++17 compliant compiler (e.g g++ >= 8 or clang >= 6)
 * pkg-config
 * MPI (e.g. openmpi) for parallel execution
+* Python 3.10 for postprocessing
 
 Make a new folder (e.g. `dumux`) that will contain all modules.
 Inside of this folder, clone this repo.

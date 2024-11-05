@@ -100,6 +100,7 @@ class DiffusionTestProblem : public FVProblem<TypeTag>
     using NumEqVector = Dumux::NumEqVector<PrimaryVariables>;
     using BoundaryTypes = Dumux::BoundaryTypes<GetPropType<TypeTag, Properties::ModelTraits>::numEq()>;
     using Tensor = Dune::FieldMatrix<double, 3, 3>;
+    enum class DiffusionType { DataIsotropic, DataTensor, LiteratureIsotropic };
 public:
     DiffusionTestProblem(std::shared_ptr<const GridGeometry> gridGeometry)
     : ParentType(gridGeometry)
@@ -117,7 +118,8 @@ public:
         useCurveFit_ = getParam<bool>("Problem.UseCurveFit", false);
 
         // whether to use isotropic mean diffusion or the full potentially anisotropic diffusion tensor
-        useIsotropicMeanDiffusion_ = getParam<bool>("Problem.UseIsotropicMeanDiffusion", true);
+        const auto diffType = getParam<std::string>("Problem.DiffusionType", "DataTensor");
+
     }
 
     BoundaryTypes boundaryTypesAtPos(const GlobalPosition& globalPos) const
@@ -209,7 +211,7 @@ private:
     std::vector<Dune::BlockVector<Scalar>> concentrationElementDataParams_;
     Scalar time_;
     bool useCurveFit_;
-    bool useIsotropicMeanDiffusion_;
+    DiffusionType diffusionType_;
 
     Dune::BlockVector<double> times_;
 
@@ -222,18 +224,28 @@ private:
         for (const auto& element : elements(gridView))
         {
             const auto eIdx = this->gridGeometry().elementMapper().index(element);
-            if (useIsotropicMeanDiffusion_)
+            if (diffusionType_ == DiffusionType::DataTensor)
             {
-                const auto data = gridData.getParameter(element, "md");
-                for (int i = 0; i < 3; ++i)
-                    diffusionCoefficient_[eIdx][i][i] = data;
-            }
-            else
-            {
+                static const auto waterToGadobutrolRatio = getParam<Scalar>("Problem.DiffusionCoefficientWaterToGadobutrolRatio", 3.5e-10/3e-9); // mm^2/s
                 const auto data = gridData.template getArrayParameter<double, 9>(element, "dt");
                 for (int i = 0; i < 3; ++i)
                     for (int j = 0; j < 3; ++j)
-                        diffusionCoefficient_[eIdx][i][j] = data[i*3 + j];
+                        diffusionCoefficient_[eIdx][i][j] = data[i*3 + j] * waterToGadobutrolRatio;
+            }
+            else if (diffusionType_ == DiffusionType::DataIsotropic)
+            {
+                static const auto waterToGadobutrolRatio = getParam<Scalar>("Problem.DiffusionCoefficientWaterToGadobutrolRatio", 3.5e-10/3e-9); // mm^2/s
+                const auto data = gridData.getParameter(element, "md");
+                for (int i = 0; i < 3; ++i)
+                    diffusionCoefficient_[eIdx][i][i] = data * waterToGadobutrolRatio;
+            }
+            else
+            {
+                const auto marker = gridData.getParameter(element, "subdomains");
+                static const auto grayMatterEffDiffusionCoefficient = getParam<Scalar>("Problem.GrayMatterEffectiveDiffusionCoefficient", 1.4e-4); // mm^2/s
+                static const auto whiteMatterEffDiffusionCoefficient = getParam<Scalar>("Problem.WhiteMatterEffectiveDiffusionCoefficient", 1.1e-4); // mm^2/s
+                for (int i = 0; i < 3; ++i)
+                    diffusionCoefficient_[eIdx][i][i] = marker == 1 ? grayMatterEffDiffusionCoefficient : whiteMatterEffDiffusionCoefficient;
             }
         }
 

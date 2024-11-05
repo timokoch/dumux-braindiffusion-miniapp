@@ -100,8 +100,9 @@ public:
         NumEqVector flux;
 
         // Compute the flux with `vtmv` (vector transposed times matrix times vector) or -n^T D ∇c A.
+        static const auto factor = getParam<Scalar>("Problem.DiffusionFactor", 1.0);
         flux[Indices::massBalanceEqIdx] = -1.0*vtmv(
-            scvf.unitOuterNormal(), problem.diffusionCoefficient(element, fvGeometry.scv(scvf.insideScvIdx())), gradConcentration
+            scvf.unitOuterNormal(), factor*problem.diffusionCoefficient(element, fvGeometry.scv(scvf.insideScvIdx())), gradConcentration
         )*scvf.area();
 
         return flux;

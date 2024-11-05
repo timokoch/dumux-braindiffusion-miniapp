@@ -14,6 +14,7 @@ PorosityBrain = 0.2
 PorositySAS = 0.3
 UseIsotropicMeanDiffusion = true
 UseCurveFit = true
+DiffusionFactor = 1.0
 
 [LevenbergMarquardt]
 BaseEpsilon = 1e-5

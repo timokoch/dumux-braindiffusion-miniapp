@@ -528,6 +528,7 @@ int main(int argc, char** argv)
     auto linearSolver = std::make_shared<LinearSolver>(gridGeometry->gridView(), gridGeometry->dofMapper());
     Solver solver(assembler, linearSolver);
 
+    const bool vtkAtCheckPoints = getParam<bool>("VTK.WriteOnlyAtCheckPoints", true);
     const auto& cp = problem->checkPoints();
     timeLoop->setCheckPoint(cp.begin()+1, cp.end());
     timeLoop->start(); do
@@ -548,7 +549,9 @@ int main(int argc, char** argv)
         // write VTK output (writes out the concentration field)
         problem->updateBoundaryDataForOutput(boundaryConcentration, timeLoop->time());
         computeRegionalAverages();
-        vtkWriter.write(timeLoop->time());
+
+        if (vtkAtCheckPoints && timeLoop->isCheckPoint())
+            vtkWriter.write(timeLoop->time());
 
         // report statistics of this time step
         timeLoop->reportTimeStep();

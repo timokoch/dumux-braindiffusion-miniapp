@@ -75,15 +75,17 @@ and run it with
 Runtime parameters can be configures via the parameter file `params.input`
 that is located in the app folder but also linked to the build folder.
 
-For postprocessing, switch to the folder `dumux-braindiffsion-miniapp/post`.
+For postprocessing, switch to the folder `dumux-braindiffsion-miniapp`.
 Create a Python virtual environment (tested Python version 3.10) and install requirements:
 
 * `python3 -m venv venv`
 * `source venv/bin/activate`
 * `pip install -r requirements.txt`
 
-Then run the postprocessing scripts to create result visualizations:
+Then switch to `dumux-braindiffsion-miniapp/post` and run the postprocessing
+scripts to create result visualizations:
 
+* `cd post`
 * `python plot.py` (plots concentration in white and gray matter over time)
 * `python map_to_mri.py` (maps the concentration field to the MRI reference image, may take a while)
 * `python plot_mapped_mri.py` (plots the concentration field on the MRI reference image)

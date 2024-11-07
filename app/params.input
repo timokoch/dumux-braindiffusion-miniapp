@@ -8,11 +8,11 @@ Verbosity = true
 
 [Problem]
 Name = diffusion
-SurfaceConductance = 1e-4 # in mm/s
-TransferCoeffToBlood = 1e-5 # in 1/s
+SurfaceConductance = 2e-4 # in mm/s
+TransferCoeffToBlood = 1e-6 # in 1/s
 PorosityBrain = 0.2
-PorositySAS = 0.3
-UseIsotropicMeanDiffusion = true
+PorositySAS = 0.4
+DiffusionType = LiteratureIsotropic
 UseCurveFit = true
 DiffusionFactor = 1.0
 

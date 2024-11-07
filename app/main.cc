@@ -119,7 +119,6 @@ public:
 
         // whether to use isotropic mean diffusion or the full potentially anisotropic diffusion tensor
         const auto diffType = getParam<std::string>("Problem.DiffusionType", "DataTensor");
-
     }
 
     BoundaryTypes boundaryTypesAtPos(const GlobalPosition& globalPos) const
@@ -419,7 +418,7 @@ int main(int argc, char** argv)
         whiteMatterAmountDataData.reserve(5);
     }
 
-    const auto computeRegionalAverages = [&]()
+    const auto computeRegionalAverages = [&](bool outputVolumeSummary = false)
     {
         const auto& gridView = gridGeometry->gridView();
 
@@ -488,27 +487,35 @@ int main(int argc, char** argv)
 
         if (gridView.comm().rank() == 0)
         {
+            const auto l_per_mm3 = 1e6; // mesh is in mm and concentration in mol/m^3
             const auto t = timeLoop->time();
-            totalConcentrationData.push_back({t, totalAmount/totalVolume});
-            grayMatterConcentrationData.push_back({t, grayMatterAmount/grayMatterVolume});
-            whiteMatterConcentrationData.push_back({t, whiteMatterAmount/whiteMatterVolume});
-            totalAmountData.push_back({t, totalAmount});
-            grayMatterAmountData.push_back({t, grayMatterAmount});
-            whiteMatterAmountData.push_back({t, whiteMatterAmount});
+            totalConcentrationData.push_back({t, totalAmount/totalVolume}); // in mol/m^3 = mmol/L
+            grayMatterConcentrationData.push_back({t, grayMatterAmount/grayMatterVolume}); // in mol/m^3 = mmol/L
+            whiteMatterConcentrationData.push_back({t, whiteMatterAmount/whiteMatterVolume}); // in mol/m^3 = mmol/L
+            totalAmountData.push_back({t, totalAmount/l_per_mm3}); // in mmol
+            grayMatterAmountData.push_back({t, grayMatterAmount/l_per_mm3}); // in mmol
+            whiteMatterAmountData.push_back({t, whiteMatterAmount/l_per_mm3}); // in mmol
 
             if (isCheckPoint)
             {
-                totalConcentrationDataData.push_back({t, totalAmountInData/totalVolume});
-                grayMatterConcentrationDataData.push_back({t, grayMatterAmountInData/grayMatterVolume});
-                whiteMatterConcentrationDataData.push_back({t, whiteMatterAmountInData/whiteMatterVolume});
-                totalAmountDataData.push_back({t, totalAmountInData});
-                grayMatterAmountDataData.push_back({t, grayMatterAmountInData});
-                whiteMatterAmountDataData.push_back({t, whiteMatterAmountInData});
+                totalConcentrationDataData.push_back({t, totalAmountInData/totalVolume}); // in mol/m^3 = mmol/L
+                grayMatterConcentrationDataData.push_back({t, grayMatterAmountInData/grayMatterVolume}); // in mol/m^3 = mmol/L
+                whiteMatterConcentrationDataData.push_back({t, whiteMatterAmountInData/whiteMatterVolume}); // in mol/m^3 = mmol/L
+                totalAmountDataData.push_back({t, totalAmountInData/l_per_mm3}); // in mmol
+                grayMatterAmountDataData.push_back({t, grayMatterAmountInData/l_per_mm3}); // in mmol
+                whiteMatterAmountDataData.push_back({t, whiteMatterAmountInData/l_per_mm3}); // in mmol
+            }
+
+            if (outputVolumeSummary)
+            {
+                std::cout << "Total volume: " << totalVolume << " mm^3" << std::endl;
+                std::cout << "Gray matter amount: " << grayMatterVolume << " mm^3 (" << grayMatterVolume/totalVolume*100 << "%)" << std::endl;
+                std::cout << "White matter amount: " << whiteMatterVolume << " mm^3 (" << whiteMatterVolume/totalVolume*100 << "%)" << std::endl;
             }
         }
     };
 
-    computeRegionalAverages();
+    computeRegionalAverages(true);
 
     // VTK output
     VtkOutputModule<GridVariables, SolutionVector> vtkWriter(*gridVariables, sol, problem->name());

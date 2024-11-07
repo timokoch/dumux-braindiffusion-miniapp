@@ -6,12 +6,11 @@ import click
 
 sec_to_days = 1.0/(24*60*60)
 
-plot_concentration = True
-
 # plot time series data from total.txt, whitematter.txt, and graymatter.txt
 @click.command()
 @click.option('--folder', default="../build-cmake/app", help='Folder containing the data')
-def plot_data(folder: str):
+@click.option('-c', '--plot_concentration', is_flag=True, default=False, help='Wheather to plot concentration instead of amount')
+def plot_data(folder: str, plot_concentration: bool):
     # load data
     if plot_concentration:
         total = np.loadtxt(f'{folder}/total.txt')

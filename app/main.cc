@@ -398,33 +398,26 @@ int main(int argc, char** argv)
     );
 
     // Concentration averages for different regions
-    std::vector<Dune::FieldVector<double, 2>> totalConcentrationData, grayMatterConcentrationData, whiteMatterConcentrationData;
-    std::vector<Dune::FieldVector<double, 2>> totalAmountData, grayMatterAmountData, whiteMatterAmountData;
-    std::vector<Dune::FieldVector<double, 2>> totalConcentrationDataData, grayMatterConcentrationDataData, whiteMatterConcentrationDataData;
-    std::vector<Dune::FieldVector<double, 2>> totalAmountDataData, grayMatterAmountDataData, whiteMatterAmountDataData;
+    constexpr std::size_t numRegions = 3;
+    // assume markers start consecutive from 1, ... and 0 is the quantity for the whole mesh
+    std::array<std::string, numRegions> regions{"total", "graymatter", "whitematter"};
+    std::array<std::vector<Dune::FieldVector<double, 2>>, numRegions>
+        concentrationData, amountData, concentrationDataMRI, amountDataMRI;
     if (gridGeometry->gridView().comm().rank() == 0)
     {
-        totalConcentrationData.reserve(72);
-        grayMatterConcentrationData.reserve(72);
-        whiteMatterConcentrationData.reserve(72);
-        totalAmountData.reserve(72);
-        grayMatterAmountData.reserve(72);
-        whiteMatterAmountData.reserve(72);
-        totalConcentrationDataData.reserve(5);
-        grayMatterConcentrationDataData.reserve(5);
-        whiteMatterConcentrationDataData.reserve(5);
-        totalAmountDataData.reserve(5);
-        grayMatterAmountDataData.reserve(5);
-        whiteMatterAmountDataData.reserve(5);
+        for (int i = 0; i < numRegions; ++i)
+        {
+            concentrationData[i].reserve(72);
+            amountData[i].reserve(72);
+            concentrationDataMRI[i].reserve(5);
+            amountDataMRI[i].reserve(5);
+        }
     }
 
     const auto computeRegionalAverages = [&](bool outputVolumeSummary = false)
     {
         const auto& gridView = gridGeometry->gridView();
 
-        Scalar totalAmount = 0.0, grayMatterAmount = 0.0, whiteMatterAmount = 0.0;
-        Scalar totalAmountInData = 0.0, grayMatterAmountInData = 0.0, whiteMatterAmountInData = 0.0;
-        Scalar totalVolume = 0.0, grayMatterVolume = 0.0, whiteMatterVolume = 0.0;
 
         const bool isCheckPoint = timeLoop->isCheckPoint() || timeLoop->timeStepIndex() == 0;
         if (isCheckPoint)
@@ -438,80 +431,64 @@ int main(int argc, char** argv)
             }
         }
 
+        std::array<Scalar, numRegions> amount, amountMRI, volume;
         for (const auto& element : elements(gridView, Dune::Partitions::interior))
         {
             const auto elemSol = elementSolution(element, sol, *gridGeometry);
             const auto geometry = element.geometry();
             const auto center = geometry.center();
-            const auto volume = geometry.volume();
+            const auto vol = geometry.volume();
             const auto c = evalSolution(element, geometry, *gridGeometry, elemSol, center);
-            totalAmount += c*volume;
-            totalVolume += volume;
+            amount[0] += c*vol;
+            volume[0] += vol;
 
-            Scalar cData = 0.0;
+            Scalar cMRI = 0.0;
             if (isCheckPoint)
             {
                 const auto elemSol = elementSolution(element, dataSol, *gridGeometry);
-                cData = evalSolution(element, geometry, *gridGeometry, elemSol, center);
-                totalAmountInData += cData*volume;
+                cMRI = evalSolution(element, geometry, *gridGeometry, elemSol, center);
+                amountMRI[0] += cMRI*vol;
             }
 
             const auto marker = gridData->getParameter(element, "subdomains");
-            if (marker == 1)
-            {
-                grayMatterAmount += c*volume;
-                grayMatterVolume += volume;
-                grayMatterAmountInData += cData*volume;
-            }
-            else if (marker == 2)
-            {
-                whiteMatterAmount += c*volume;
-                whiteMatterVolume += volume;
-                whiteMatterAmountInData += cData*volume;
-            }
+            amount[marker] += c*vol;
+            volume[marker] += vol;
+            amountMRI[marker] += cMRI*vol;
         }
 
-        totalAmount = gridView.comm().sum(totalAmount);
-        grayMatterAmount = gridView.comm().sum(grayMatterAmount);
-        whiteMatterAmount = gridView.comm().sum(whiteMatterAmount);
-        grayMatterVolume = gridView.comm().sum(grayMatterVolume);
-        whiteMatterVolume = gridView.comm().sum(whiteMatterVolume);
-        totalVolume = gridView.comm().sum(totalVolume);
+        for (int i = 0; i < numRegions; ++i)
+        {
+            amount[i] = gridView.comm().sum(amount[i]);
+            volume[i] = gridView.comm().sum(volume[i]);
+        }
 
         if (isCheckPoint)
-        {
-            totalAmountInData = gridView.comm().sum(totalAmountInData);
-            grayMatterAmountInData = gridView.comm().sum(grayMatterAmountInData);
-            whiteMatterAmountInData = gridView.comm().sum(whiteMatterAmountInData);
-        }
+            for (int i = 0; i < numRegions; ++i)
+                amountMRI[i] = gridView.comm().sum(amountMRI[i]);
 
         if (gridView.comm().rank() == 0)
         {
             const auto l_per_mm3 = 1e6; // mesh is in mm and concentration in mol/m^3
             const auto t = timeLoop->time();
-            totalConcentrationData.push_back({t, totalAmount/totalVolume}); // in mol/m^3 = mmol/L
-            grayMatterConcentrationData.push_back({t, grayMatterAmount/grayMatterVolume}); // in mol/m^3 = mmol/L
-            whiteMatterConcentrationData.push_back({t, whiteMatterAmount/whiteMatterVolume}); // in mol/m^3 = mmol/L
-            totalAmountData.push_back({t, totalAmount/l_per_mm3}); // in mmol
-            grayMatterAmountData.push_back({t, grayMatterAmount/l_per_mm3}); // in mmol
-            whiteMatterAmountData.push_back({t, whiteMatterAmount/l_per_mm3}); // in mmol
+
+            for (int i = 0; i < numRegions; ++i)
+            {
+                concentrationData[i].push_back({t, amount[i]/volume[i]}); // in mol/m^3 = mmol/L
+                amountData[i].push_back({t, amount[i]/l_per_mm3}); // in mmol
+            }
 
             if (isCheckPoint)
             {
-                totalConcentrationDataData.push_back({t, totalAmountInData/totalVolume}); // in mol/m^3 = mmol/L
-                grayMatterConcentrationDataData.push_back({t, grayMatterAmountInData/grayMatterVolume}); // in mol/m^3 = mmol/L
-                whiteMatterConcentrationDataData.push_back({t, whiteMatterAmountInData/whiteMatterVolume}); // in mol/m^3 = mmol/L
-                totalAmountDataData.push_back({t, totalAmountInData/l_per_mm3}); // in mmol
-                grayMatterAmountDataData.push_back({t, grayMatterAmountInData/l_per_mm3}); // in mmol
-                whiteMatterAmountDataData.push_back({t, whiteMatterAmountInData/l_per_mm3}); // in mmol
+                for (int i = 0; i < numRegions; ++i)
+                {
+                    concentrationDataMRI[i].push_back({t, amountMRI[i]/volume[i]}); // in mol/m^3 = mmol/L
+                    amountDataMRI[i].push_back({t, amountMRI[i]/l_per_mm3}); // in mmol
+                }
             }
 
             if (outputVolumeSummary)
-            {
-                std::cout << "Total volume: " << totalVolume << " mm^3" << std::endl;
-                std::cout << "Gray matter amount: " << grayMatterVolume << " mm^3 (" << grayMatterVolume/totalVolume*100 << "%)" << std::endl;
-                std::cout << "White matter amount: " << whiteMatterVolume << " mm^3 (" << whiteMatterVolume/totalVolume*100 << "%)" << std::endl;
-            }
+                for (int i = 0; i < numRegions; ++i)
+                    std::cout << Fmt::format("Volume {}: {} mm^3\n", regions[i], volume[i]);
         }
     };
 
@@ -569,19 +546,13 @@ int main(int argc, char** argv)
 
     if (gridGeometry->gridView().comm().rank() == 0)
     {
-        writeContainerToFile(totalConcentrationData, "total.txt");
-        writeContainerToFile(grayMatterConcentrationData, "graymatter.txt");
-        writeContainerToFile(whiteMatterConcentrationData, "whitematter.txt");
-        writeContainerToFile(totalAmountData, "total_amount.txt");
-        writeContainerToFile(grayMatterAmountData, "graymatter_amount.txt");
-        writeContainerToFile(whiteMatterAmountData, "whitematter_amount.txt");
-
-        writeContainerToFile(totalConcentrationDataData, "total_data.txt");
-        writeContainerToFile(grayMatterConcentrationDataData, "graymatter_data.txt");
-        writeContainerToFile(whiteMatterConcentrationDataData, "whitematter_data.txt");
-        writeContainerToFile(totalAmountDataData, "total_amount_data.txt");
-        writeContainerToFile(grayMatterAmountDataData, "graymatter_amount_data.txt");
-        writeContainerToFile(whiteMatterAmountDataData, "whitematter_amount_data.txt");
+        for (int i = 0; i < numRegions; ++i)
+        {
+            writeContainerToFile(concentrationData[i], Fmt::format("{}.txt", regions[i]));
+            writeContainerToFile(amountData[i], Fmt::format("{}_amount.txt", regions[i]));
+            writeContainerToFile(concentrationDataMRI[i], Fmt::format("{}_data.txt", regions[i]));
+            writeContainerToFile(amountDataMRI[i], Fmt::format("{}_amount_data.txt", regions[i]));
+        }
     }
 
     return 0;

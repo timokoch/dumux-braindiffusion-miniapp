@@ -6,14 +6,12 @@ Tracer diffusion in the brain
 We model tracer transport in the brain tissue over 72 hours. The total gadolinium concentration, $c(x, t)$ (amount per brain volume in mmol/l) at position $x$, and time $t \in [0, 259200]$ (in s), satisfies
 
 ```math
-\begin{subequations}
 \begin{align}
     \frac{\partial c}{\partial t} - \mathrm{div}\left( D^{\mathrm{eff}}\nabla c \right)  & = - r \phi^{-1} c, \\
 \intertext{subject to the boundary and initial conditions,}
     -D^{\mathrm{eff}}\nabla c \cdot \boldsymbol{n} &= k (\phi^{-1}c - \hat c(x,t)),\\
     c(x, 0) &= 0,
 \end{align}
-\end{subequations}
 ```
 
 where $D^\mathrm{eff}$ is the effective diffusion tensor of gadolinium, $r$ is a local clearance rate due to tracer clearance to blood, $k$ is the brain surface conductivity and $\hat c (x,t)$ is the solute concentration in the cerebrospinal fluid just outside of the pial surface of the brain, and $\phi$ is the extra-cellular volume fraction of the brain tissue which is occupied by interstitial fluid. We assume that only the extra-cellular space is accessible to the tracer. Dividing the total concentration by $\phi$ computes the concentration per interstitial fluid volume.

@@ -7,8 +7,13 @@ We model tracer transport in the brain tissue over 72 hours. The total gadoliniu
 
 ```math
 \begin{align}
-    \frac{\partial c}{\partial t} - \mathrm{div}\left( D^{\mathrm{eff}}\nabla c \right)  & = - r \phi^{-1} c, \\
-\intertext{subject to the boundary and initial conditions,}
+    \frac{\partial c}{\partial t} - \mathrm{div}\left( D^{\mathrm{eff}}\nabla c \right) &= - r \phi^{-1} c
+\end{align}
+```
+subject to the boundary and initial conditions
+
+```math
+\begin{align}
     -D^{\mathrm{eff}}\nabla c \cdot \boldsymbol{n} &= k (\phi^{-1}c - \hat c(x,t)),\\
     c(x, 0) &= 0,
 \end{align}

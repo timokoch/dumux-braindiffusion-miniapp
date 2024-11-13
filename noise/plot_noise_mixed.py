@@ -1,48 +1,97 @@
-#!/usr/bin/env python
-# coding: utf-8
+"""
+Predicted concentration vs estimated concentrations
+for the Mixed sequence with a given SNR
+"""
 
-# Noise analysis
-# Predicted concentration vs estimated concentraion
 import matplotlib.pyplot as plt
 import numpy as np
+import click
 
 from common import compute_T1, compute_c
 from mixed import compute_ir_signal, compute_se_signal, LOOKUP_TABLE, extract_mixed_t1
 
-np.random.seed(0)
 
-# test different concentrations for a given noise level
-num_samples = 200
-c_values = np.linspace(0.01, 0.5, 200)
-c = np.vstack([c_values for _ in range(num_samples)])
-T1 = compute_T1(c)
-SNR = 25
-IR = compute_ir_signal(T1, SNR=SNR)
-SE = compute_se_signal(T1, SNR=SNR)
+def generate_mixed_data(snr, samples):
+    # reproducibility
+    np.random.seed(0)
 
-T1_volume = extract_mixed_t1(IR=IR, SE=SE, lookup_table=LOOKUP_TABLE)
-c_est = compute_c(T1_volume)
+    # test different concentrations for a given noise level
+    repeats = 50
+    c_values = np.linspace(0.005, 0.3, samples)
+    T1_values = compute_T1(c_values)
+    c = np.vstack([c_values for _ in range(repeats)]).T
+    T1 = compute_T1(c)
 
-# scatter plot of the estimated concentration vs the true concentration
-# and add the median, the mean, the identity line and the 95% confidence interval as a shaded area
-fig, ax = plt.subplots(1, 2, figsize=(10, 5))
-ax[0].scatter(c, c_est, s=2)
-c_max = np.max(c)
-c_min = np.min(c)
-ax[0].plot([c_min, c_max], [c_min, c_max], color="black", label="identity")
-ax[0].plot(c_values, np.nanmedian(c_est, axis=0), color="red", label="mean")
-ax[0].plot(c_values, np.nanmean(c_est, axis=0), color="blue", label="median")
-ax[0].set_xlabel("True concentration (mmol/l)")
-ax[0].set_ylabel("Estimated concentration")
-ax[0].set_title(f"SNR = {SNR}")
-ax[0].legend()
+    # generate noisy IR and SE signals
+    IR = compute_ir_signal(T1, SNR=snr)
+    SE = compute_se_signal(T1, SNR=snr)
 
-ax[1].scatter(c, T1_volume, s=2)
-ax[1].plot(c_values, np.nanmedian(T1_volume, axis=0), color="red", label="mean")
-ax[1].plot(c_values, np.nanmean(T1_volume, axis=0), color="blue", label="median")
-ax[1].set_xlabel("True concentration (mmol/l)")
-ax[1].set_ylabel("T1 estimate")
-ax[1].set_title(f"SNR = {SNR}")
-ax[1].legend()
+    # estimate the concentration and T1 values from the noisy signals
+    T1_est = extract_mixed_t1(IR=IR, SE=SE, lookup_table=LOOKUP_TABLE)
+    c_est = compute_c(T1_est)
 
-plt.show()
+    T1 = T1 / 1000
+    T1_est = T1_est / 1000
+    T1_values = T1_values / 1000
+
+    c_threshold = 0.1
+    T1_threshold = compute_T1(c_threshold) * 0.001
+
+    return c, c_est, T1, T1_est, c_values, T1_values, c_threshold, T1_threshold
+
+
+def plot_estimated_versus_actual(snr, samples, ax_c=None, ax_t1=None):
+
+    c, c_est, T1, T1_est, c_values, T1_values, c_threshold, T1_threshold = generate_mixed_data(snr, samples)
+
+    fontsize = 12
+    if ax_c is not None:
+        ax_c.scatter(c, c_est, s=0.5, color="grey", alpha=0.2, label="simulated")
+        c_max, c_min = np.max(c), np.min(c)
+        ax_c.plot(c_values, np.nanmean(c_est, axis=1), color="red", label="mean(sim)")
+        ax_c.plot([c_min, c_max], [c_min, c_max], "--", color="black", label="identity")
+        ax_c.set_xlabel("True c (mmol/l)", fontsize=fontsize)
+        ax_c.set_ylabel("Estimated c (mmol/l)", fontsize=fontsize)
+        ax_c.annotate(
+            f'SNR={snr}',
+            xy=(0.04, 0.96), xycoords='axes fraction',
+            color='black', fontsize=fontsize,
+            ha='left', va='top',
+        )
+        ax_c.axvline(c_threshold, color="black", linestyle="-.")
+        leg = ax_c.legend(loc="upper right", frameon=False, markerscale=5.)
+        for lh in leg.legend_handles:
+            lh.set_alpha(1)
+
+    if ax_t1 is not None:
+        ax_t1.scatter(T1, T1_est, s=0.5, color="grey", alpha=0.2, label="simulated")
+        T1_max, T1_min = np.max(T1), np.min(T1)
+        ax_t1.plot(T1_values, np.nanmean(T1_est, axis=1), color="red", label="mean(sim)")
+        ax_t1.plot([T1_min, T1_max], [T1_min, T1_max], "--", color="black", label="identity")
+        ax_t1.set_xlabel("True T1 (s)", fontsize=fontsize)
+        ax_t1.set_ylabel("Estimated T1 (s)", fontsize=fontsize)
+        ax_t1.annotate(
+            f'SNR={snr}',
+            xy=(0.04, 0.96), xycoords='axes fraction',
+            color='black', fontsize=fontsize,
+            ha='left', va='top',
+        )
+        ax_t1.axvline(T1_threshold, color="black", linestyle="-.")
+        ax_t1.invert_xaxis()
+        leg = ax_t1.legend(loc="lower left", frameon=False, markerscale=5.)
+        for lh in leg.legend_handles:
+            lh.set_alpha(1)
+
+
+@click.command()
+@click.option("--snr", default=25, help="Signal to noise ratio")
+@click.option("--samples", default=100, help="Number of samples")
+def main(snr, samples):
+    fig, ax = plt.subplots(1, 2, figsize=(8, 3))
+    plot_estimated_versus_actual(ax_c=ax[0], ax_t1=ax[1], snr=snr, samples=samples)
+    fig.suptitle("concentration and T1 from Mixed sequence")
+    fig.tight_layout()
+    plt.show()
+
+if __name__ == '__main__':
+    main()

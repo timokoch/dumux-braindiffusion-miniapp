@@ -61,20 +61,3 @@ def curve_fit_wrapper(f, t, y, p0):
         popt[0] *= ymax
 
     return popt
-
-
-def fit_voxel(time_s: np.ndarray, pbar, m: np.ndarray) -> np.ndarray:
-    if pbar is not None:
-        pbar.update(1)
-    p0 = np.array((1.0, 1.0, 1.0))
-    if not np.all(np.isfinite(m)):
-        return np.nan * np.zeros_like(p0)
-    try:
-        popt = curve_fit_wrapper(f, time_s, m, p0)
-    except (OptimizeWarning, FloatingPointError):
-        return np.nan * np.zeros_like(p0)
-    except RuntimeError as e:
-        if "maxfev" in str(e):
-            return np.nan * np.zeros_like(p0)
-        raise e
-    return popt

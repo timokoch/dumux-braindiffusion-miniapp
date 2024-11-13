@@ -7,7 +7,7 @@ import numpy as np
 mpl.rcParams['savefig.pad_inches'] = 0
 
 if __name__ == '__main__':
-    fig, axs = plt.subplots(2, len(TIME_STAMPS), figsize=(25, 6), frameon=False)
+    fig, axs = plt.subplots(2, len(TIME_STAMPS), figsize=(15, 6), frameon=False)
     background_data = niifile_to_ndarray('../data/sub-01_ses-01_T1w_registered.nii.gz')
     for j in range(len(VTK_FIELDS)):
         for i, time_stamp in enumerate(TIME_STAMPS):
@@ -39,5 +39,8 @@ if __name__ == '__main__':
     cbar = fig.colorbar(axs[0][0].images[1], cax=cbar_ax)
     cbar.ax.tick_params(labelsize=16)
     cbar.set_label('c in mmol/l', fontsize=18)
+
+    fig.savefig('mapped_mri.png', dpi=600)
+    fig.savefig('mapped_mri_small.png', dpi=72)
 
     plt.show()

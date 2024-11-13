@@ -117,3 +117,23 @@ There is an app to test the curve fitting algorithm for the boudary data. Build
 * `cd ../../post && python plot_curvefit.py`
 
 to inspect the results. This is thought to be used for debugging purposes only.
+
+
+License
+-------
+
+The code is licensed under the GPLv3 (or any later version at your option) license.
+See the LICENSES/ file for details.
+
+
+Publication and reuse
+-----------------------
+
+This repository contains code in connection with the data publication
+"MRI Data of CSF-Tracer Evolution Over 72h in Human Brain For Data-Integrated Simulations"
+by Jørgen Riseth, Timo Koch, Sofie Lian, Tryggve Holck Storas, Ludmil Zikatanov, Kaja
+Nordengen, and Kent-Andre Mardal.
+
+Please refer to this publication for reuse. When using the code in this repository
+in a scientific context or otherwise, please cite the above publication and respect
+the software license.

@@ -67,3 +67,7 @@ dist
 # ignore data files for now
 data.vtu
 *.nii.gz
+
+# data files
+!data/CMakeLists.txt
+data/*

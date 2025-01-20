@@ -5,6 +5,8 @@ dumux_add_test(
     SOURCES main.cc
 )
 
+add_dependencies(braindiffusion download_mri_data)
+
 dumux_add_test(
     NAME curvefit
     SOURCES curvefit.cc

@@ -52,7 +52,9 @@ dumux
 
 Then run from the top folder (`dumux`):
 
-* `./dumux-braindiffsion-miniapp/setup.sh`
+```
+./dumux-braindiffsion-miniapp/setup.sh
+```
 
 to download Dune/DuMux dependencies and configure and build the project.
 The script takes care of this but if you are manually cloning the dependencies
@@ -119,6 +121,18 @@ scripts to create result visualizations:
 * `python plot.py` (plots concentration in white and gray matter over time)
 * `python map_to_mri.py` (maps the concentration field to the MRI reference image, may take a while)
 * `python plot_mapped_mri.py` (plots the concentration field on the MRI reference image)
+
+Troubleshooting
+----------------
+
+In case you had an error about a missing dependency, then after installing the dependency
+you can reconfigure and rebuild the software by running from the topfolder (`dumux`):
+
+```
+./dumux-braindiffsion-miniapp/reconfigure.sh
+```
+
+After that continue building the `braindiffusion` app as described above.
 
 
 Other info

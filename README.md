@@ -14,12 +14,12 @@ subject to the boundary and initial conditions
 
 ```math
 \begin{align}
-    -D^{\mathrm{eff}}\nabla c \cdot \boldsymbol{n} &= k (\phi^{-1}c - \hat c(x,t)),\\
+    -D^{\mathrm{eff}}\nabla c \cdot \boldsymbol{n} &= k (\phi^{-1}c - \hat{\phi}^{-1} \hat c(x,t)),\\
     c(x, 0) &= 0,
 \end{align}
 ```
 
-where $D^\mathrm{eff}$ is the effective diffusion tensor of gadolinium, $r$ is a local clearance rate due to tracer clearance to blood, $k$ is the brain surface conductivity and $\hat c (x,t)$ is the solute concentration in the cerebrospinal fluid just outside of the pial surface of the brain, and $\phi$ is the extra-cellular volume fraction of the brain tissue which is occupied by interstitial fluid. We assume that only the extra-cellular space is accessible to the tracer. Dividing the total concentration by $\phi$ computes the concentration per interstitial fluid volume.
+where $D^\mathrm{eff}$ is the effective diffusion tensor of gadolinium, $r$ is a local clearance rate due to tracer clearance to blood, $k$ is the brain surface conductivity and $\hat c (x,t)$ is the solute concentration in the cerebrospinal fluid just outside of the pial surface of the brain, and $\phi$, $\hat{\phi}$ are the extra-cellular volume fraction of the brain tissue and the SAS, respectively, occupied by interstitial fluid. We assume that only the extra-cellular space is accessible to the tracer. Dividing the total concentration by $\phi$ (resp. $\hat{\phi}$) computes the concentration per interstitial fluid volume.
 
 We take the values for $D^\mathrm{eff}$ and $\hat{c}(x,t)$ directly from the provided data set.
 A comparison of the simulation field $c(x,t)$ and the corresponding field provided in the data set at 5 time points in shown in the figure above.

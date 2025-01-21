@@ -54,7 +54,6 @@ Then run from the top folder (`dumux`):
 * `./dumux-braindiffsion-miniapp/setup.sh`
 
 to download Dune/DuMux dependencies and configure and build the project.
-It also automatically downloads the required dataset from Zenodo which can take a while.
 The script takes care of this but if you are manually cloning the dependencies
 make sure to use that branch.
 
@@ -90,6 +89,8 @@ and run it with
 mpirun -np 4 ./braindiffusion
 ```
 
+The first time this is executed, it also automatically downloads
+the required dataset from Zenodo which can take a while.
 Runtime parameters can be configures via the parameter file `params.input`
 that is located in the app folder but also linked to the build folder.
 

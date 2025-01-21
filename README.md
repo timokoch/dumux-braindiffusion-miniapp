@@ -80,7 +80,8 @@ Usage
 You can compile the application by running
 
 ```
-cd dumux-braindiffsion-miniapp/build-cmake/app && make braindiffusion
+cd dumux-braindiffsion-miniapp/build-cmake/app
+make braindiffusion
 ```
 
 The first time this is executed, it also automatically downloads
@@ -125,7 +126,8 @@ Other info
 There is an app to test the curve fitting algorithm for the boudary data. Build
 
 ```
-cd dumux-braindiffsion-miniapp/build-cmake/app && make curvefit
+cd dumux-braindiffsion-miniapp/build-cmake/app
+make curvefit
 ./curvefit
 cd ../../post && python plot_curvefit.py
 ```

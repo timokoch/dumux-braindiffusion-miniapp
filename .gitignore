@@ -71,3 +71,4 @@ data.vtu
 # data files
 !data/CMakeLists.txt
 data/*
+post/*.png

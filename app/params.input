@@ -6,7 +6,7 @@ TEnd = 72h
 InitialTimeStepSize = 1h
 
 [Grid]
-File = data.vtu
+File = ../../data/mesh-data/mri_processed_data/sub-01/modeling/resolution32/data.vtu
 Verbosity = true
 
 [Problem]

@@ -11,7 +11,7 @@ mpl.rcParams['savefig.pad_inches'] = 0
 
 if __name__ == '__main__':
     fig, axs = plt.subplots(2, len(TIME_STAMPS), figsize=(15, 6), frameon=False)
-    background_data = niifile_to_ndarray('../data/sub-01_ses-01_T1w_registered.nii.gz')
+    background_data = niifile_to_ndarray('../data/mri-dataset/mri_dataset/sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz')
     for j in range(len(VTK_FIELDS)):
         for i, time_stamp in enumerate(TIME_STAMPS):
             overlay_images(

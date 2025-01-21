@@ -45,7 +45,7 @@ def get_vtk_files(root):
 if __name__ == '__main__':
     # read the PVD file which is an XML file that contains the list of VTK files
     vtk_files = get_vtk_files(ET.parse(f'{PREFIX}diffusion.pvd').getroot())
-    ref_filename = '../data/sub-01_ses-01_T1w_registered.nii.gz'
+    ref_filename = '../data/mri-dataset/mri_dataset/sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz'
     ref_mri = sm.load_mri(ref_filename, dtype=np.single)
     print(f'Loaded reference MRI image from {ref_filename}')
 

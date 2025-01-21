@@ -25,6 +25,7 @@ set(MRI_T1_DATA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset/mri_dataset/su
 
 add_custom_command(
   OUTPUT ${MRI_CONCENTRATION_DATA_FILE} ${MRI_T1_DATA_FILE}
+         ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset
   COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/bin/get_data.py --output ${CMAKE_CURRENT_SOURCE_DIR}/data
   BYPRODUCTS ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data.zip
              ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset.zip

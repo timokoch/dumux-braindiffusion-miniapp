@@ -141,6 +141,12 @@ you need to supply a Zenodo access token for `make`
 ZENODO_ACCESS_TOKEN=<token> make braindiffusion
 ```
 
+Removal
+-------
+
+If you don't need the app anymore, simply delete the created
+folder `dumux` with all the content.
+
 
 License
 -------

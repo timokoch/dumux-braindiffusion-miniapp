@@ -21,8 +21,8 @@ subject to the boundary and initial conditions
 
 where $D^\mathrm{eff}$ is the effective diffusion tensor of gadolinium, $r$ is a local clearance rate due to tracer clearance to blood, $k$ is the brain surface conductivity and $\hat c (x,t)$ is the solute concentration in the cerebrospinal fluid just outside of the pial surface of the brain, and $\phi$, $\hat{\phi}$ are the extra-cellular volume fraction of the brain tissue and the SAS, respectively, occupied by interstitial fluid. We assume that only the extra-cellular space is accessible to the tracer. Dividing the total concentration by $\phi$ (resp. $\hat{\phi}$) computes the concentration per interstitial fluid volume.
 
-We take the values for $D^\mathrm{eff}$ and $\hat{c}(x,t)$ directly from the provided data set.
-A comparison of the simulation field $c(x,t)$ and the corresponding field provided in the data set at 5 time points in shown in the figure above.
+We take the values for $D^\mathrm{eff}$ and $\hat{c}(x,t)$ directly from the provided data set. As $\hat{c}(x,t)$ is only provided at five discrete time points,
+we provide two strategies to fill data inbetween: linear interpolation and a curve fit procedure where we fit an exponential of the form $f(t, (a, b)(x)) = a(x) t \mathrm{exp}(-b(x)t)$ to the data for every degree of freedom on the boundary. A comparison of the simulation field $c(x,t)$ and the corresponding field provided in the data set at 5 time points in shown in the figure above.
 
 Software requirements and installation
 ----------------------------------------

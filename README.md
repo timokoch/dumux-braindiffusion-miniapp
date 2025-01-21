@@ -54,6 +54,7 @@ Then run from the top folder (`dumux`):
 * `./dumux-braindiffsion-miniapp/setup.sh`
 
 to download Dune/DuMux dependencies and configure and build the project.
+It also automatically downloads the required dataset from Zenodo which can take a while.
 The script takes care of this but if you are manually cloning the dependencies
 make sure to use that branch.
 
@@ -79,11 +80,15 @@ Usage
 
 You can compile the application by running
 
-* `cd dumux-braindiffsion-miniapp/build-cmake/app && make braindiffusion`
+```
+cd dumux-braindiffsion-miniapp/build-cmake/app && make braindiffusion
+```
 
 and run it with
 
-* `mpirun -np 4 ./braindiffusion`
+```
+mpirun -np 4 ./braindiffusion
+```
 
 Runtime parameters can be configures via the parameter file `params.input`
 that is located in the app folder but also linked to the build folder.
@@ -91,9 +96,11 @@ that is located in the app folder but also linked to the build folder.
 For postprocessing, switch to the folder `dumux-braindiffsion-miniapp`.
 Create a Python virtual environment (tested Python version 3.10) and install requirements:
 
-* `python3 -m venv venv`
-* `source venv/bin/activate`
-* `pip install -r requirements.txt`
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
 Then switch to `dumux-braindiffsion-miniapp/post` and run the postprocessing
 scripts to create result visualizations:
@@ -109,9 +116,11 @@ Other info
 
 There is an app to test the curve fitting algorithm for the boudary data. Build
 
-* `cd dumux-braindiffsion-miniapp/build-cmake/app && make curvefit`
-* `./curvefit`
-* `cd ../../post && python plot_curvefit.py`
+```
+cd dumux-braindiffsion-miniapp/build-cmake/app && make curvefit
+./curvefit
+cd ../../post && python plot_curvefit.py
+```
 
 to inspect the results. This is thought to be used for debugging purposes only.
 

@@ -104,16 +104,6 @@ scripts to create result visualizations:
 * `python plot_mapped_mri.py` (plots the concentration field on the MRI reference image)
 
 
-MRI noise estimation in LookLocker sequence and Mixed sequence
-----------------------------------------------------------------
-
-The concentration data used as basis for the simulations is estimated from raw MRI data.
-The MRI data is subject to noise. In what way noise propagates through the estimation
-is estimates in the scripts provided in the `noise` folder.
-
-![MRI noise estimation](./doc/img/mri_noise_ll_mixed_small.png)
-
-
 Other info
 ----------
 

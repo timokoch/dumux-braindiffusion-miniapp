@@ -32,9 +32,11 @@ add_custom_command(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_custom_target(
-  download_mri_data ALL
-  DEPENDS ${MRI_CONCENTRATION_DATA_FILE} ${MRI_T1_DATA_FILE}
+add_custom_target(download_mri_data
+  DEPENDS ${MRI_CONCENTRATION_DATA_FILE}
+          ${MRI_T1_DATA_FILE}
+          ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data
+          ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset
 )
 
 # the application code is in the app/ subdirectory

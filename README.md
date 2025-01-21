@@ -128,7 +128,6 @@ If you need an unpublished version of the dataset for testing during development
 you need to supply a Zenodo access token for `make`
 
 ```
-ZENODO_ACCESS_TOKEN=<token> make all
 ZENODO_ACCESS_TOKEN=<token> make braindiffusion
 ```
 

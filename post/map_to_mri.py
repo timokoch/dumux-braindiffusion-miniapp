@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright © Timo Koch
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 """
 Script that maps the vtk simulation data to the MRI image space
 """

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright © Timo Koch
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from overlay import overlay_images, niifile_to_ndarray

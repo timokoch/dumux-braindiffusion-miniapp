@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright © Timo Koch
+# SPDX-License-Identifier: CC0-1.0
 
 import matplotlib.pyplot as plt
 import numpy as np

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright © Timo Koch
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import matplotlib.pyplot as plt
 import numpy as np
 import glob

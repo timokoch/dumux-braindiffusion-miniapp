@@ -1,10 +1,9 @@
 // -*- mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 // vi: set et ts=4 sw=4 sts=4:
 //
-// SPDX-FileCopyrightInfo: Copyright © Timo Koch
+// SPDX-FileCopyrightText: Copyright © Timo Koch
 // SPDX-License-Identifier: GPL-3.0-or-later
 //
-
 #ifndef DUMUX_SIMPLE_DIFFUSION_MODEL_HH
 #define DUMUX_SIMPLE_DIFFUSION_MODEL_HH
 

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightTest: Copyright © Jørgen Riseth and Timo Koch
+# SPDX-FileCopyrightText: Copyright © Jørgen Riseth and Timo Koch
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """

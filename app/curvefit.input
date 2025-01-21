@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright © Timo Koch
+# SPDX-License-Identifier: CC0-1.0
+
 [Grid]
 File = data.vtu
 Verbosity = true

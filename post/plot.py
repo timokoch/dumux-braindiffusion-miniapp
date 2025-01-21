@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+# SPDX-FileCopyrightText: Copyright © Jørgen Riseth and Timo Koch
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import matplotlib.pyplot as plt
 import numpy as np

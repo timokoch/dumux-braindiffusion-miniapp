@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightTest: Copyright © Timo Koch
+# SPDX-FileCopyrightText: Copyright © Timo Koch
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from zenodo_download import download_single_file, get_file_list, Settings

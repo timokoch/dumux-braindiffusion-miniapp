@@ -1,0 +1,31 @@
+version = 1
+
+[[annotations]]
+path = "doc/img/*"
+SPDX-FileCopyrightText = "Copyright © Timo Koch"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = [
+    "README.md",
+    "bin/README.md",
+]
+SPDX-FileCopyrightText = "Copyright © Timo Koch"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = [
+    "*.pc.in",
+    "dune.module",
+    "config.h.cmake",
+    "doc/CMakeLists.txt",
+    "doc/doxygen/CMakeLists.txt",
+    "doc/doxygen/Doxylocal",
+    "cmake/modules/CMakeLists.txt",
+    "cmake/modules/DumuxBraindiffusionMiniappMacros.cmake",
+    "setup.sh",
+    "requirements.txt",
+    "cmake.opts",
+]
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC0-1.0"

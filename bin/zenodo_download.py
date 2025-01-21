@@ -1,23 +1,32 @@
+# SPDX-FileCopyrightTest: Copyright © Jørgen Riseth and Timo Koch
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"""
+Download data from Zenodo.
+In case the data is not publicly avaiable yet, set the
+access token in the environment e.g. by calling:
+ZENODO_ACCESS_TOKEN=<your_token> python zenodo_download.py
+"""
+
+
 import argparse
 import requests
-from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+import os
 
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file_encoding="utf-8")
-    api_url: str
-    access_token: str
-
-
-def make_settings(env_file: str) -> Settings:
-    return Settings(_env_file=env_file)
+class Settings:
+    def __init__(self):
+        self.api_url = "https://zenodo.org/api/deposit/depositions/14266867"
+        self.access_token = os.environ.get("ZENODO_ACCESS_TOKEN", None)
+        if self.access_token:
+            print("-- Found access token in environment variable ZENODO_ACCESS_TOKEN")
 
 
 def get_file_list(settings: Settings) -> list[dict[str, str]]:
     r = requests.get(
         f"{settings.api_url}/files",
-        params={"access_token": settings.access_token},
+        params={"access_token": settings.access_token} if settings.access_token else {},
     )
     r.raise_for_status()
     return r.json()
@@ -37,7 +46,10 @@ def find_file_id(filename: str, files: list[dict[str, str]], settings: Settings)
 
 
 def download_single_file(file_download_url: str, output: str, settings: Settings):
-    r = requests.get(file_download_url, params={"access_token": settings.access_token})
+    r = requests.get(
+        file_download_url,
+        params={"access_token": settings.access_token} if settings.access_token else {},
+    )
     r.raise_for_status()
     with open(output, "wb") as f:
         f.write(r.content)
@@ -48,18 +60,17 @@ def list_all_files(files: list[dict[str, str]]):
         print(deposition_file["filename"])
 
 
-def validate_input(parser):
+def validate_input(parser: argparse.ArgumentParser):
     args = parser.parse_args()
     if args.ls:
         return args
     elif not args.output:
         raise parser.error("Missing required option '--output'.")
     if (not args.all) and (args.filename is None):
-        parser.error("'--filename' option required without '--list' or '--all'")
+        parser.error(
+            "Missing '--filename'. Option required without '--list' or '--all'"
+        )
     return args
-
-
-
 
 
 def main():
@@ -85,16 +96,12 @@ def main():
         action="store_true",
         help="List files in record, without downloading.",
     )
-    parser.add_argument(
-        "--env",
-        type=str,
-        help="Name of environment file.",
-        default=".env",
-    )
+
     args = validate_input(parser)
 
-    settings = make_settings(args.env)
+    settings = Settings()
     files = get_file_list(settings)
+
     if args.ls:
         list_all_files(files)
         return
@@ -111,13 +118,16 @@ def main():
         raise IOError(f"Output directory {output_dir} does not exist")
 
     for file in files:
-        output_name = output_dir / Path(file['filename'])
+        output_name = output_dir / Path(file["filename"])
         if output_name.is_file():
             print(f"-- Found file {file['filename']}. Skip download.")
             continue
 
         print(f"Downloading file {file['filename']}")
-        download_single_file(file["links"]["download"], f"{args.output}/{file['filename']}", settings)
+        download_single_file(
+            file["links"]["download"], f"{args.output}/{file['filename']}", settings
+        )
+
 
 if __name__ == "__main__":
     main()

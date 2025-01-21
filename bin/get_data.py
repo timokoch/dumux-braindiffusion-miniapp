@@ -1,7 +1,11 @@
-from zenodo_download import download_single_file, make_settings, get_file_list
+# SPDX-FileCopyrightTest: Copyright © Timo Koch
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from zenodo_download import download_single_file, get_file_list, Settings
 from pathlib import Path
 import argparse
 import shutil
+
 
 def main():
     parser = argparse.ArgumentParser(description="Download files.")
@@ -11,16 +15,9 @@ def main():
         help="Output directory.",
     )
 
-    parser.add_argument(
-        "--env",
-        type=str,
-        help="Name of environment file.",
-        default=".env",
-    )
-
     args = parser.parse_args()
 
-    settings = make_settings(args.env)
+    settings = Settings()
     files = get_file_list(settings)
     output_dir = Path(args.output)
     if not output_dir.exists():
@@ -46,12 +43,15 @@ def main():
 
         output_unpack_dir = output_dir / Path(file_name.rstrip(".zip"))
         if output_unpack_dir.is_dir():
-            print(f"-- Found extracted data directory {output_unpack_dir}. Skip unpacking.")
+            print(
+                f"-- Found extracted data directory {output_unpack_dir}. Skip unpacking."
+            )
             continue
 
         output_name = output_dir / Path(file_name)
         print(f"-- Unpacking archive to {output_unpack_dir}")
         shutil.unpack_archive(output_name, output_unpack_dir)
+
 
 if __name__ == "__main__":
     main()

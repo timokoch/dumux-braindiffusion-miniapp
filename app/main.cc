@@ -398,9 +398,11 @@ int main(int argc, char** argv)
     );
 
     // Concentration averages for different regions
-    constexpr std::size_t numRegions = 3;
     // assume markers start consecutive from 1, ... and 0 is the quantity for the whole mesh
-    std::array<std::string, numRegions> regions{"total", "graymatter", "whitematter"};
+    constexpr std::size_t numRegions = 4;
+    std::array<std::string, numRegions> regions{"total", "corticalgraymatter", "whitematter", "subcorticalgraymatter"};
+
+    // data arrays for outout data
     std::array<std::vector<Dune::FieldVector<double, 2>>, numRegions>
         concentrationData, amountData, concentrationDataMRI, amountDataMRI;
     if (gridGeometry->gridView().comm().rank() == 0)
@@ -414,11 +416,10 @@ int main(int argc, char** argv)
         }
     }
 
+    // function to compute output data points
     const auto computeRegionalAverages = [&](bool outputVolumeSummary = false)
     {
         const auto& gridView = gridGeometry->gridView();
-
-
         const bool isCheckPoint = timeLoop->isCheckPoint() || timeLoop->timeStepIndex() == 0;
         if (isCheckPoint)
         {
@@ -431,7 +432,7 @@ int main(int argc, char** argv)
             }
         }
 
-        std::array<Scalar, numRegions> amount, amountMRI, volume;
+        std::array<Scalar, numRegions> amount = {}, amountMRI = {}, volume = {};
         for (const auto& element : elements(gridView, Dune::Partitions::interior))
         {
             const auto elemSol = elementSolution(element, sol, *gridGeometry);
@@ -451,6 +452,9 @@ int main(int argc, char** argv)
             }
 
             const auto marker = gridData->getParameter(element, "subdomains");
+            if (!(marker == 1 || marker == 2 || marker == 3))
+                DUNE_THROW(Dune::IOError, "Unknown subdomain marker " << marker);
+
             amount[marker] += c*vol;
             volume[marker] += vol;
             amountMRI[marker] += cMRI*vol;
@@ -468,8 +472,8 @@ int main(int argc, char** argv)
 
         if (gridView.comm().rank() == 0)
         {
-            const auto l_per_mm3 = 1e6; // mesh is in mm and concentration in mol/m^3
-            const auto t = timeLoop->time();
+            const Scalar l_per_mm3 = 1.0e6; // mesh is in mm and concentration in mol/m^3
+            const Scalar t = timeLoop->time();
 
             for (int i = 0; i < numRegions; ++i)
             {
@@ -487,12 +491,19 @@ int main(int argc, char** argv)
             }
 
             if (outputVolumeSummary)
+            {
                 for (int i = 0; i < numRegions; ++i)
+                {
+                    std::cout << Fmt::format("Region {}\n", regions[i]);
                     std::cout << Fmt::format("Volume {}: {} mm^3\n", regions[i], volume[i]);
+                    std::cout << Fmt::format("Amount {}: {} mmol\n", regions[i], amount[i]/l_per_mm3);
+                    std::cout << Fmt::format("Concentration {}: {} mmol/L\n", regions[i], amount[i]/volume[i]);
+                }
+            }
         }
     };
 
-    computeRegionalAverages(true);
+    computeRegionalAverages(/*outputVolumeSummary=*/true);
 
     // VTK output
     VtkOutputModule<GridVariables, SolutionVector> vtkWriter(*gridVariables, sol, problem->name());

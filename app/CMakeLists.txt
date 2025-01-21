@@ -9,6 +9,7 @@ dumux_add_test(
 )
 
 add_dependencies(braindiffusion download_mri_data)
+dune_target_enable_all_packages(braindiffusion)
 
 dumux_add_test(
     NAME curvefit
@@ -16,3 +17,4 @@ dumux_add_test(
 )
 
 add_dependencies(curvefit download_mri_data)
+dune_target_enable_all_packages(curvefit)

@@ -17,6 +17,8 @@ include(DuneMacros)
 
 dune_project()
 
+find_package(SuiteSparse REQUIRED COMPONENTS CHOLMOD UMFPACK)
+
 find_package(Python COMPONENTS Interpreter REQUIRED)
 message(STATUS "Found Python interpreter: ${Python_EXECUTABLE}")
 

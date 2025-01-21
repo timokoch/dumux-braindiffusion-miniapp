@@ -32,6 +32,7 @@ Software requirements and installation
 * pkg-config
 * MPI (e.g. openmpi) for parallel execution
 * Python 3.10 for postprocessing
+* Suitesparse (at least CHOLMOD and UMFPack)
 
 Make a new folder (e.g. `dumux`) that will contain all modules.
 Inside of this folder, clone this repo

@@ -14,3 +14,5 @@ dumux_add_test(
     NAME curvefit
     SOURCES curvefit.cc
 )
+
+add_dependencies(curvefit download_mri_data)

@@ -83,14 +83,21 @@ You can compile the application by running
 cd dumux-braindiffsion-miniapp/build-cmake/app && make braindiffusion
 ```
 
-and run it with
+The first time this is executed, it also automatically downloads
+the required dataset from Zenodo which can take a while.
+
+You can run it the program in parallel with MPI
 
 ```
 mpirun -np 4 ./braindiffusion
 ```
 
-The first time this is executed, it also automatically downloads
-the required dataset from Zenodo which can take a while.
+or in serial
+
+```
+./braindiffusion
+```
+
 Runtime parameters can be configures via the parameter file `params.input`
 that is located in the app folder but also linked to the build folder.
 

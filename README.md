@@ -34,8 +34,15 @@ Software requirements and installation
 * Python 3.10 for postprocessing
 
 Make a new folder (e.g. `dumux`) that will contain all modules.
-Inside of this folder, clone this repo.
-Folder structure would look like this
+Inside of this folder, clone this repo
+
+```
+mkdir dumux
+cd dumux
+git clone https://github.com/timokoch/dumux-braindiffusion-miniapp.git
+````
+
+The folder structure will look like this
 
 ```
 dumux
@@ -50,7 +57,7 @@ to download Dune/DuMux dependencies and configure and build the project.
 The script takes care of this but if you are manually cloning the dependencies
 make sure to use that branch.
 
-After that folder structure will look like this:
+After that folder structure should look like this:
 
 ```
 dumux
@@ -118,6 +125,14 @@ There is an app to test the curve fitting algorithm for the boudary data. Build
 
 to inspect the results. This is thought to be used for debugging purposes only.
 
+If you need an unpublished version of the dataset for testing during development,
+you need to supply a Zenodo access token for `make`
+
+```
+ZENODO_ACCESS_TOKEN=<token> ./dune-common/bin/dunecontrol --opts=dumux-braindiffusion-miniapp/cmake.opts make -j
+ZENODO_ACCESS_TOKEN=<token> make braindiffusion
+```
+
 
 License
 -------
@@ -129,11 +144,11 @@ See the LICENSES/ file for details.
 Publication and reuse
 -----------------------
 
-This repository contains code in connection with the data publication
+This repository contains code in connection with the Gonzo dataset and the data publication
 "MRI Data of CSF-Tracer Evolution Over 72h in Human Brain For Data-Integrated Simulations"
 by Jørgen Riseth, Timo Koch, Sofie Lian, Tryggve Holck Storas, Ludmil Zikatanov, Kaja
 Nordengen, and Kent-Andre Mardal.
 
-Please refer to this publication for reuse. When using the code in this repository
+Please refer to this publication for reuse of the data. When using the code in this repository
 in a scientific context or otherwise, please cite the above publication and respect
 the software license.

@@ -34,7 +34,7 @@ def get_vtk_files(root):
     # each file is a DataSet tag in the PVD file
     vtk_files = []
     for data_set in root.findall('.//DataSet'):
-        timestep = int(data_set.attrib['timestep'])
+        timestep = int(float(data_set.attrib['timestep']))
         if timestep not in TIME_STAMPS:
             continue
         vtk_file = data_set.attrib['file']

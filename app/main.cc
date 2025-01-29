@@ -20,7 +20,7 @@
 #include <dumux/common/boundarytypes.hh>
 #include <dumux/common/fvproblem.hh>
 
-#include <dumux/io/vtkoutputmodule.hh>
+#include <dumux/io/gridwriter.hh>
 #include <dumux/io/grid/gridmanager_alu.hh>
 #include <dumux/io/container.hh>
 #include <dumux/io/chrono.hh>
@@ -506,12 +506,22 @@ int main(int argc, char** argv)
     computeRegionalAverages(/*outputVolumeSummary=*/true);
 
     // VTK output
-    VtkOutputModule<GridVariables, SolutionVector> vtkWriter(*gridVariables, sol, problem->name());
+    IO::OutputModule vtkWriter(
+        IO::Format::pvd_with(
+            IO::Format::vtu.with({
+                .encoder = IO::Encoding::raw,
+                .compressor = IO::Compression::none,
+                .data_format = IO::VTK::DataFormat::appended
+            })
+        ),
+        *gridVariables, sol, problem->name()
+    );
+
     vtkWriter.addVolumeVariable([](const auto& vv){ return vv.priVar(0); }, "c");
     std::vector<double> boundaryConcentration(gridGeometry->numDofs(), 0.0);
     problem->updateBoundaryDataForOutput(boundaryConcentration, timeLoop->time());
     vtkWriter.addField(boundaryConcentration, "c_b");
-    vtkWriter.addField(dataSol, "c_data");
+    vtkWriter.addPointField([&](const auto& v){ return dataSol[gridGeometry->dofMapper().index(v)][0]; }, "c_data");
     vtkWriter.write(0.0);
 
     using Assembler = FVAssembler<TypeTag, DiffMethod::numeric>;

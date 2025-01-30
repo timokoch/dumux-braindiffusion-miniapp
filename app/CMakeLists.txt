@@ -4,6 +4,12 @@
 dune_symlink_to_source_files(FILES params.input curvefit.input)
 
 dumux_add_test(
+    NAME braindiffusion_test_compile
+    SOURCES main.cc
+    COMPILE_ONLY
+)
+
+dumux_add_test(
     NAME braindiffusion
     SOURCES main.cc
 )

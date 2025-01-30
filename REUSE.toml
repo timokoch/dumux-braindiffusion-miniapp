@@ -24,6 +24,7 @@ path = [
     "cmake/modules/CMakeLists.txt",
     "cmake/modules/DumuxBraindiffusionMiniappMacros.cmake",
     "setup.sh",
+    "reconfigure.sh",
     "requirements.txt",
     "cmake.opts",
 ]

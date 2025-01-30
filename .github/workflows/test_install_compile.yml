@@ -23,12 +23,18 @@ jobs:
       with:
         path: "dumux-braindiffusion-miniapp"
 
-    - name: Dependencies and Configure and Build
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+    - name: ⚙️ Apt Install SuiteSparse
+      run: sudo apt-get install -y libsuitesparse-dev
+      if: matrix.os == 'ubuntu-latest'
+
+    - name: ⚙️ Brew Install SuiteSparse
+      run: brew install suite-sparse
+      if: matrix.os == 'macos-latest'
+
+    - name: ⚙️ Dependencies and Configure and Build
       run: ./dumux-braindiffusion-miniapp/setup.sh
 
-    - name: Test compilation
+    - name: ⚙️ Test compilation
       run: >
         cd dumux-braindiffusion-miniapp/build-cmake/app
         make braindiffusion_test_compile

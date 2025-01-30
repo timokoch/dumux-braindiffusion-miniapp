@@ -38,6 +38,5 @@ jobs:
       run: ./dumux-braindiffusion-miniapp/setup.sh
 
     - name: ⚙️ Test compilation
-      run: >
-        cd dumux-braindiffusion-miniapp/build-cmake/app
-        make braindiffusion_test_compile
+      run: make braindiffusion_test_compile
+      working-directory: dumux-braindiffusion-miniapp/build-cmake/app

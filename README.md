@@ -14,7 +14,7 @@ subject to the boundary and initial conditions
 
 ```math
 \begin{align}
-    -D^{\mathrm{eff}}\nabla c \cdot \boldsymbol{n} &= k (\phi^{-1}c - \hat{\phi}^{-1} \hat c(x,t)),\\
+    -D^{\mathrm{eff}}\nabla c \cdot \mathbf{n} &= k (\phi^{-1}c - \hat{\phi}^{-1} \hat c(x,t)),\\
     c(x, 0) &= 0,
 \end{align}
 ```

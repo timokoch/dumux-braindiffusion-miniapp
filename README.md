@@ -57,10 +57,10 @@ Then run from the top folder (`dumux`):
 ```
 
 to download Dune/DuMux dependencies and configure and build the project.
-The script takes care of this but if you are manually cloning the dependencies
+The script takes care of this, but if you are manually cloning the dependencies,
 make sure to use that branch.
 
-After that folder structure should look like this:
+After that, the folder structure should look like this:
 
 ```
 dumux
@@ -88,9 +88,9 @@ make braindiffusion
 ```
 
 The first time this is executed, it also automatically downloads
-the required dataset from Zenodo which can take a while.
+the required dataset from Zenodo, which can take a while.
 
-You can run it the program in parallel with MPI
+You can run the program in parallel with MPI
 
 ```
 mpirun -np 4 ./braindiffusion
@@ -102,10 +102,10 @@ or in serial
 ./braindiffusion
 ```
 
-Runtime parameters can be configures via the parameter file `params.input`
-that is located in the app folder but also linked to the build folder.
+Runtime parameters can be configured via the parameter file `params.input`
+that is located in the `app` folder, but also linked to the build folder (`build-cmake/app`).
 
-For postprocessing, switch to the folder `dumux-braindiffusion-miniapp`.
+For post-processing, switch to the `dumux-braindiffusion-miniapp` folder.
 Create a Python virtual environment (tested Python version 3.10) and install requirements:
 
 ```
@@ -126,19 +126,19 @@ Troubleshooting
 ----------------
 
 In case you had an error about a missing dependency, then after installing the dependency
-you can reconfigure and rebuild the software by running from the topfolder (`dumux`):
+you can reconfigure and rebuild the software by running from the top folder (`dumux`):
 
 ```
 ./dumux-braindiffusion-miniapp/reconfigure.sh
 ```
 
-After that continue building the `braindiffusion` app as described above.
+After that, continue building the `braindiffusion` app as described above.
 
 
 Other info
 ----------
 
-There is an app to test the curve fitting algorithm for the boudary data. Build
+There is an app to test the curve fitting algorithm for the boundary data. Build
 
 ```
 cd dumux-braindiffusion-miniapp/build-cmake/app
@@ -147,7 +147,7 @@ make curvefit
 cd ../../post && python plot_curvefit.py
 ```
 
-to inspect the results. This is thought to be used for debugging purposes only.
+to inspect the results. This is intended for debugging purposes only.
 
 If you need an unpublished version of the dataset for testing during development,
 you need to supply a Zenodo access token for `make`
@@ -159,7 +159,7 @@ ZENODO_ACCESS_TOKEN=<token> make braindiffusion
 Removal
 -------
 
-If you don't need the app anymore, simply delete the created
+If you don't need the app anymore, delete the created
 folder `dumux` with all the content.
 
 

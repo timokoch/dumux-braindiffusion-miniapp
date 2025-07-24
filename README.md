@@ -47,13 +47,13 @@ The folder structure will look like this
 
 ```
 dumux
-└───dumux-braindiffsion-miniapp
+└───dumux-braindiffusion-miniapp
 ```
 
 Then run from the top folder (`dumux`):
 
 ```
-./dumux-braindiffsion-miniapp/setup.sh
+./dumux-braindiffusion-miniapp/setup.sh
 ```
 
 to download Dune/DuMux dependencies and configure and build the project.
@@ -64,7 +64,7 @@ After that folder structure should look like this:
 
 ```
 dumux
-├───dumux-braindiffsion-miniapp
+├───dumux-braindiffusion-miniapp
 │    ├───build-cmake/appl
 │    ├───appl
 │    ├───CMakeLists.txt
@@ -83,7 +83,7 @@ Usage
 You can compile the application by running
 
 ```
-cd dumux-braindiffsion-miniapp/build-cmake/app
+cd dumux-braindiffusion-miniapp/build-cmake/app
 make braindiffusion
 ```
 
@@ -105,7 +105,7 @@ or in serial
 Runtime parameters can be configures via the parameter file `params.input`
 that is located in the app folder but also linked to the build folder.
 
-For postprocessing, switch to the folder `dumux-braindiffsion-miniapp`.
+For postprocessing, switch to the folder `dumux-braindiffusion-miniapp`.
 Create a Python virtual environment (tested Python version 3.10) and install requirements:
 
 ```
@@ -114,7 +114,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Then switch to `dumux-braindiffsion-miniapp/post` and run the postprocessing
+Then switch to `dumux-braindiffusion-miniapp/post` and run the postprocessing
 scripts to create result visualizations:
 
 * `cd post`
@@ -129,7 +129,7 @@ In case you had an error about a missing dependency, then after installing the d
 you can reconfigure and rebuild the software by running from the topfolder (`dumux`):
 
 ```
-./dumux-braindiffsion-miniapp/reconfigure.sh
+./dumux-braindiffusion-miniapp/reconfigure.sh
 ```
 
 After that continue building the `braindiffusion` app as described above.
@@ -141,7 +141,7 @@ Other info
 There is an app to test the curve fitting algorithm for the boudary data. Build
 
 ```
-cd dumux-braindiffsion-miniapp/build-cmake/app
+cd dumux-braindiffusion-miniapp/build-cmake/app
 make curvefit
 ./curvefit
 cd ../../post && python plot_curvefit.py

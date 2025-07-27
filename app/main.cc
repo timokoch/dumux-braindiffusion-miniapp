@@ -21,7 +21,8 @@
 #include <dumux/common/fvproblem.hh>
 
 #include <dumux/io/gridwriter.hh>
-#include <dumux/io/grid/gridmanager_alu.hh>
+//#include <dumux/io/grid/gridmanager_alu.hh>
+#include <dumux/io/grid/gridmanager_ug.hh>
 #include <dumux/io/container.hh>
 #include <dumux/io/chrono.hh>
 #include <dumux/io/gnuplotinterface.hh>
@@ -331,7 +332,8 @@ struct DiffusionTest
     using InheritsFrom = std::tuple<DiffusionModel, BoxModel>;
 
     using Scalar = double;
-    using Grid = Dune::ALUGrid<3, 3, Dune::simplex, Dune::conforming>;
+    //using Grid = Dune::ALUGrid<3, 3, Dune::simplex, Dune::conforming>;
+    using Grid = Dune::UGGrid<3>;
 
     template<class TypeTag>
     using Problem = DiffusionTestProblem<TypeTag>;

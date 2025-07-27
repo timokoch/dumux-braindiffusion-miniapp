@@ -10,7 +10,6 @@
 #include <chrono>
 #include <thread>
 
-#include <dune/alugrid/grid.hh>
 #include <dune/common/fvector.hh>
 
 #include <dumux/common/initialize.hh>

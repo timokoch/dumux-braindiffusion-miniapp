@@ -23,14 +23,15 @@ find_package(Python COMPONENTS Interpreter REQUIRED)
 message(STATUS "Found Python interpreter: ${Python_EXECUTABLE}")
 
 set(MRI_CONCENTRATION_DATA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data/mri_processed_data/sub-01/modeling/resolution32/data.vtu)
-set(MRI_T1_DATA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-precontrast-only/mri_dataset/sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz)
+set(MRI_T1_DATA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-pre-contrast-only/mri_dataset/sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz)
 
 add_custom_command(
   OUTPUT ${MRI_CONCENTRATION_DATA_FILE} ${MRI_T1_DATA_FILE}
-         ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-precontrast-only
+         ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data
+         ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-pre-contrast-only
   COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/bin/get_data.py --output ${CMAKE_CURRENT_SOURCE_DIR}/data
   BYPRODUCTS ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data.zip
-             ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-precontrast-only.zip
+             ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-pre-contrast-only.zip
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -38,7 +39,7 @@ add_custom_target(download_mri_data
   DEPENDS ${MRI_CONCENTRATION_DATA_FILE}
           ${MRI_T1_DATA_FILE}
           ${CMAKE_CURRENT_SOURCE_DIR}/data/mesh-data
-          ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-precontrast-only
+          ${CMAKE_CURRENT_SOURCE_DIR}/data/mri-dataset-pre-contrast-only
 )
 
 # the application code is in the app/ subdirectory

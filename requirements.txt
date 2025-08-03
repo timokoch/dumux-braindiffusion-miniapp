@@ -1,7 +1,8 @@
 matplotlib
 numpy
 click
-pyvista
+pyvista<0.45
+PyQt6
 nibabel
 simple_mri
 vtk

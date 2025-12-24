@@ -29,6 +29,7 @@
 #include <dumux/common/numeqvector.hh>
 #include <dumux/common/volumevariables.hh>
 #include <dumux/discretization/method.hh>
+#include <dumux/discretization/defaultlocaloperator.hh>
 
 namespace Dumux::Properties::TTag {
 struct DiffusionModel {};
@@ -38,9 +39,9 @@ namespace Dumux {
 
 template<class TypeTag>
 class DiffusionModelLocalResidual
-: public GetPropType<TypeTag, Properties::BaseLocalResidual>
+: public DiscretizationDefaultLocalOperator<TypeTag>
 {
-    using ParentType = GetPropType<TypeTag, Properties::BaseLocalResidual>;
+    using ParentType = DiscretizationDefaultLocalOperator<TypeTag>;
     using Scalar = GetPropType<TypeTag, Properties::Scalar>;
     using Problem = GetPropType<TypeTag, Properties::Problem>;
     using NumEqVector = Dumux::NumEqVector<GetPropType<TypeTag, Properties::PrimaryVariables>>;

@@ -7,6 +7,6 @@ Module: dumux-braindiffusion-miniapp
 Version: 1.0
 Maintainer: timokoch@uio.no
 # Required build dependencies
-Depends: dune-common dune-geometry dune-grid dune-alugrid dune-istl dune-localfunctions dumux
+Depends: dune-common dune-geometry dune-grid dune-uggrid dune-istl dune-localfunctions dumux
 # Optional build dependencies
 #Suggests:

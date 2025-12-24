@@ -25,7 +25,7 @@ def main():
 
     for file in files:
         file_name = file["filename"]
-        if file_name not in ["mesh-data.zip", "mri-dataset-precontrast-only.zip"]:
+        if file_name not in ["mesh-data.zip", "mri-dataset-pre-contrast-only.zip"]:
             continue
 
         output_name = output_dir / Path(file_name)
@@ -38,7 +38,7 @@ def main():
 
     for file in files:
         file_name = file["filename"]
-        if file_name not in ["mesh-data.zip", "mri-dataset-precontrast-only.zip"]:
+        if file_name not in ["mesh-data.zip", "mri-dataset-pre-contrast-only.zip"]:
             continue
 
         output_unpack_dir = output_dir / Path(file_name.rstrip(".zip"))

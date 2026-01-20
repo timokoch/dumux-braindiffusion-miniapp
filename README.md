@@ -174,10 +174,8 @@ Publication and reuse
 -----------------------
 
 This repository contains code in connection with the Gonzo dataset and the data publication
-"MRI Data of CSF-Tracer Evolution Over 72h in Human Brain For Data-Integrated Simulations"
-by Jørgen Riseth, Timo Koch, Sofie Lian, Tryggve Holck Storas, Ludmil Zikatanov,
-Lars Magnus Valnes, Kaja Nordengen, and Kent-Andre Mardal.
+[Riseth, J.N., Koch, T., Lian, S.L. et al. Human brain MRI data of intrathecally injected tracer evolution over 72 hours for data-integrated simulations. Sci Data (2026).](https://doi.org/10.1038/s41597-026-06564-1)
 
-Please refer to this publication for reuse of the data. When using the code in this repository
-in a scientific context or otherwise, please cite the above publication and respect
-the software license.
+Please refer to this publication for the reuse of the data.
+When using the code in this repository in a scientific context or otherwise,
+please cite the above publication and respect the software license.
